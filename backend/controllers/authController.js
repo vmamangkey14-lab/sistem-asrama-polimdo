@@ -108,12 +108,15 @@ exports.register = async (req, res) => {
       INSERT INTO pendaftaran
       (
         mahasiswa_id,
+        kamar_id,
+        tanggal_daftar,
         status_pendaftaran
       )
-      VALUES (?, ?)
+      VALUES (?, ?, NOW(), ?)
       `,
       [
         mahasiswaId,
+        null,
         "Menunggu Verifikasi",
       ]
     );

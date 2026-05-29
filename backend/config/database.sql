@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS pendaftaran (
   id INT AUTO_INCREMENT PRIMARY KEY,
   mahasiswa_id INT NOT NULL,
   kamar_id INT DEFAULT NULL,
+  tanggal_daftar DATETIME DEFAULT NULL,
   status_pendaftaran ENUM('Menunggu Verifikasi', 'Terverifikasi', 'Sudah Ditempatkan', 'Ditolak') NOT NULL DEFAULT 'Menunggu Verifikasi',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (mahasiswa_id) REFERENCES mahasiswa(id) ON DELETE CASCADE,
