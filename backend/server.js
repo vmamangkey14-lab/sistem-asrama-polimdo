@@ -21,11 +21,8 @@ const app = express();
 // 🔥 CORS FIX PALING AMAN
 // =====================================
 app.use(cors({
-  origin: "*", // sementara biar pasti lolos
+  origin: "*",
 }));
-
-// HANDLE PREFLIGHT
-app.options("/*", cors());
 
 // =====================================
 // MIDDLEWARE
