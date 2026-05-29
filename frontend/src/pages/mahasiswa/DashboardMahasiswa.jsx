@@ -291,7 +291,7 @@ function DashboardMahasiswa() {
         { label: "JURUSAN", val: user.jurusan },
         { label: "ASRAMA", val: status?.jenis_asrama || "-" },
         { label: "KAMAR", val: status?.nomor_kamar || "-" },
-        { label: "JENIS KELAMIN", val: user.jenis_kelamin || "-" },
+        { label: "GENDER", val: user.gender || "-" },
       ];
 
       const startY = 20.5;
@@ -451,11 +451,11 @@ function DashboardMahasiswa() {
               <div>
 
                 <p className="text-blue-200 text-sm">
-                  Jenis Kelamin
+                  Gender
                 </p>
 
                 <h3 className="font-semibold">
-                  {user?.jenis_kelamin}
+                  {user?.gender}
                 </h3>
 
               </div>

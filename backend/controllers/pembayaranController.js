@@ -128,7 +128,7 @@ exports.getAllPembayaran = async (req, res) => {
         m.nama as nama_mahasiswa,
         m.nim,
         m.jurusan,
-        m.jenis_kelamin,
+        m.gender,
         k.nomor_kamar,
         k.jenis_asrama
       FROM pembayaran p
