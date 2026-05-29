@@ -42,11 +42,7 @@ exports.loginAdmin = async (req, res) => {
 
     // CEK PASSWORD
 
-    const isMatch =
-      await bcrypt.compare(
-        password,
-        admin.password
-      );
+    const isMatch = password === admin.password;
 
     if (!isMatch) {
 
