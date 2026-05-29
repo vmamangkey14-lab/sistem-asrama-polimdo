@@ -25,7 +25,7 @@ app.use(cors({
 }));
 
 // HANDLE PREFLIGHT
-app.options("*", cors());
+app.options("/*", cors());
 
 // =====================================
 // MIDDLEWARE
