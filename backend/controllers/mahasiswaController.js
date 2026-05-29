@@ -15,7 +15,7 @@ const getAllMahasiswa = async (
         nama,
         nim,
         jurusan,
-        gender,
+        jenis_kelamin,
         email,
         foto_profile
       FROM mahasiswa
@@ -45,7 +45,7 @@ const updateMahasiswa = async (
       nama,
       nim,
       jurusan,
-      gender,
+      jenis_kelamin,
       email,
     } = req.body;
 
@@ -55,7 +55,7 @@ const updateMahasiswa = async (
         nama = ?,
         nim = ?,
         jurusan = ?,
-        gender = ?,
+        jenis_kelamin = ?,
         email = ?
       WHERE id = ?
     `;
@@ -66,7 +66,7 @@ const updateMahasiswa = async (
         nama,
         nim,
         jurusan,
-        gender,
+        jenis_kelamin,
         email,
         id,
       ]

@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
       !nama ||
       !nim ||
       !jurusan ||
-      !gender ||
+      !jenis_kelamin ||
       !no_hp ||
       !email ||
       !password
@@ -83,7 +83,7 @@ exports.register = async (req, res) => {
         nama,
         nim,
         jurusan,
-        gender,
+        jenis_kelamin,
         no_hp,
         email,
         password
@@ -94,7 +94,7 @@ exports.register = async (req, res) => {
         nama,
         nim,
         jurusan,
-        gender,
+        jenis_kelamin,
         no_hp,
         email,
         hashedPassword,
@@ -257,7 +257,7 @@ exports.login = async (req, res) => {
 
         jurusan: user.jurusan,
 
-        gender: user.gender,
+        jenis_kelamin: user.jenis_kelamin,
 
         no_hp: user.no_hp,
 

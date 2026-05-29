@@ -13,8 +13,8 @@ function MonitoringPage() {
   const [search, setSearch] =
     useState("");
 
-  const [genderFilter,
-  setGenderFilter] =
+  const [jenisKelaminFilter,
+  setJenisKelaminFilter] =
     useState("");
 
   const [asramaFilter,
@@ -77,12 +77,12 @@ function MonitoringPage() {
             search.toLowerCase()
           );
 
-      // GENDER
-      const matchGender =
-        genderFilter === ""
+      // JENIS KELAMIN
+      const matchJenisKelamin =
+        jenisKelaminFilter === ""
           ? true
-          : item.gender ===
-            genderFilter;
+          : item.jenis_kelamin ===
+            jenisKelaminFilter;
 
       // ASRAMA
       const matchAsrama =
@@ -101,7 +101,7 @@ function MonitoringPage() {
       return (
         matchSearch
         &&
-        matchGender
+        matchJenisKelamin
         &&
         matchAsrama
         &&
@@ -216,12 +216,12 @@ function MonitoringPage() {
             className="border rounded-2xl px-4 py-3 outline-none"
           />
 
-          {/* GENDER */}
+          {/* JENIS KELAMIN */}
 
           <select
-            value={genderFilter}
+            value={jenisKelaminFilter}
             onChange={(e) =>
-              setGenderFilter(
+              setJenisKelaminFilter(
                 e.target.value
               )
             }
@@ -229,7 +229,7 @@ function MonitoringPage() {
           >
 
             <option value="">
-              Semua Gender
+              Semua Jenis Kelamin
             </option>
 
             <option value="Laki-laki">
@@ -337,7 +337,7 @@ function MonitoringPage() {
                   </th>
 
                   <th className="text-left p-4">
-                    Gender
+                    Jenis Kelamin
                   </th>
 
                   <th className="text-left p-4">
@@ -378,7 +378,7 @@ function MonitoringPage() {
                     </td>
 
                     <td className="p-4">
-                      {item.gender}
+                      {item.jenis_kelamin}
                     </td>
 
                     <td className="p-4">

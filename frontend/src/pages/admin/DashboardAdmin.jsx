@@ -27,7 +27,7 @@ function DashboardAdmin() {
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [genderFilter, setGenderFilter] = useState("");
+  const [jenisKelaminFilter, setJenisKelaminFilter] = useState("");
   const [asramaFilter, setAsramaFilter] = useState("");
   const [selectedPendaftaranId, setSelectedPendaftaranId] = useState(null);
 
@@ -110,10 +110,10 @@ function DashboardAdmin() {
       item.nim?.toLowerCase().includes(search.toLowerCase());
 
     const matchStatus = statusFilter === "" ? true : item.status === statusFilter;
-    const matchGender = genderFilter === "" ? true : item.gender === genderFilter;
+    const matchJenisKelamin = jenisKelaminFilter === "" ? true : item.jenis_kelamin === jenisKelaminFilter;
     const matchAsrama = asramaFilter === "" ? true : item.jenis_asrama === asramaFilter;
 
-    return matchSearch && matchStatus && matchGender && matchAsrama;
+    return matchSearch && matchStatus && matchJenisKelamin && matchAsrama;
   });
 
   return (
@@ -226,11 +226,11 @@ function DashboardAdmin() {
 
             {/* Gender Filter */}
             <select
-              value={genderFilter}
-              onChange={(e) => setGenderFilter(e.target.value)}
+              value={jenisKelaminFilter}
+              onChange={(e) => setJenisKelaminFilter(e.target.value)}
               className="border border-gray-200 p-3.5 rounded-2xl text-sm text-gray-700 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition outline-none"
             >
-              <option value="">Semua Gender</option>
+              <option value="">Semua Jenis Kelamin</option>
               <option value="Laki-laki">Laki-laki</option>
               <option value="Perempuan">Perempuan</option>
             </select>
@@ -271,7 +271,7 @@ function DashboardAdmin() {
                   <th className="p-5 text-left">Nama Mahasiswa</th>
                   <th className="p-5 text-left">NIM</th>
                   <th className="p-5 text-left">Jurusan</th>
-                  <th className="p-5 text-left">Gender</th>
+                  <th className="p-5 text-left">Jenis Kelamin</th>
                   <th className="p-5 text-left">Status</th>
                   <th className="p-5 text-left">Kamar Terisi</th>
                   <th className="p-5">Tindakan Admin</th>
@@ -291,12 +291,12 @@ function DashboardAdmin() {
                       <td className="p-5 text-left">
                         <span
                           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                            item.gender === "Laki-laki"
+                            item.jenis_kelamin === "Laki-laki"
                               ? "bg-blue-50 text-blue-700"
                               : "bg-pink-50 text-pink-700"
                           }`}
                         >
-                          {item.gender}
+                          {item.jenis_kelamin}
                         </span>
                       </td>
                       {/* Status */}
@@ -341,8 +341,8 @@ function DashboardAdmin() {
                                     <option value="">Pilih & Tempatkan Kamar</option>
                                     {kamar
                                       .filter((k) => {
-                                        if (item.gender === "Laki-laki") return k.jenis_asrama === "Asrama Putra";
-                                        if (item.gender === "Perempuan") return k.jenis_asrama === "Asrama Putri";
+                                        if (item.jenis_kelamin === "Laki-laki") return k.jenis_asrama === "Asrama Putra";
+                                        if (item.jenis_kelamin === "Perempuan") return k.jenis_asrama === "Asrama Putri";
                                         return true;
                                       })
                                       .map((k) => (
@@ -388,8 +388,8 @@ function DashboardAdmin() {
                                 >
                                   {kamar
                                     .filter((k) => {
-                                      if (item.gender === "Laki-laki") return k.jenis_asrama === "Asrama Putra";
-                                      if (item.gender === "Perempuan") return k.jenis_asrama === "Asrama Putri";
+                                      if (item.jenis_kelamin === "Laki-laki") return k.jenis_asrama === "Asrama Putra";
+                                      if (item.jenis_kelamin === "Perempuan") return k.jenis_asrama === "Asrama Putri";
                                       return true;
                                     })
                                     .map((k) => (

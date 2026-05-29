@@ -107,7 +107,7 @@ exports.getAllPendaftaran = async (req, res) => {
         m.nama,
         m.nim,
         m.jurusan,
-        m.gender,
+        m.jenis_kelamin,
         m.email,
         k.nomor_kamar,
         k.jenis_asrama
@@ -149,7 +149,7 @@ exports.approvePendaftaran = async (req, res) => {
       `
       SELECT
         p.*,
-        m.gender
+        m.jenis_kelamin
       FROM pendaftaran p
       JOIN mahasiswa m
         ON p.mahasiswa_id = m.id
@@ -191,9 +191,9 @@ exports.approvePendaftaran = async (req, res) => {
       });
     }
 
-    // VALIDASI GENDER
+    // VALIDASI JENIS KELAMIN
     if (
-      pendaftaran.gender === "Laki-laki" &&
+      pendaftaran.jenis_kelamin === "Laki-laki" &&
       kamar.jenis_asrama === "Asrama Putri"
     ) {
       return res.status(400).json({
@@ -202,7 +202,7 @@ exports.approvePendaftaran = async (req, res) => {
     }
 
     if (
-      pendaftaran.gender === "Perempuan" &&
+      pendaftaran.jenis_kelamin === "Perempuan" &&
       kamar.jenis_asrama === "Asrama Putra"
     ) {
       return res.status(400).json({

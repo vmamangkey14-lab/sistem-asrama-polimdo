@@ -34,7 +34,7 @@ function RegisterPage() {
 
       jurusan: "",
 
-      gender: "",
+      jenis_kelamin: "",
 
       no_hp: "",
 
@@ -90,8 +90,8 @@ function RegisterPage() {
               jurusan:
                 form.jurusan,
 
-              gender:
-                form.gender,
+              jenis_kelamin:
+                form.jenis_kelamin,
 
               no_hp:
                 form.no_hp,
@@ -274,11 +274,11 @@ function RegisterPage() {
             required
           />
 
-          {/* GENDER */}
+          {/* JENIS KELAMIN */}
 
           <select
-            name="gender"
-            value={form.gender}
+            name="jenis_kelamin"
+            value={form.jenis_kelamin}
             onChange={handleChange}
             className="
               w-full
@@ -294,7 +294,7 @@ function RegisterPage() {
           >
 
             <option value="">
-              Pilih Gender
+              Pilih Jenis Kelamin
             </option>
 
             <option value="Laki-laki">

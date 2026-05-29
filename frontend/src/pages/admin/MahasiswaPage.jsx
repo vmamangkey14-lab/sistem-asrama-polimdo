@@ -31,8 +31,8 @@ function MahasiswaPage() {
   setSearch] =
     useState("");
 
-  const [genderFilter,
-  setGenderFilter] =
+  const [jenisKelaminFilter,
+  setJenisKelaminFilter] =
     useState("");
 
   const [editId,
@@ -45,7 +45,7 @@ function MahasiswaPage() {
       nama: "",
       nim: "",
       jurusan: "",
-      gender: "",
+      jenis_kelamin: "",
       email: "",
     });
 
@@ -111,7 +111,7 @@ function MahasiswaPage() {
       nama: item.nama,
       nim: item.nim,
       jurusan: item.jurusan,
-      gender: item.gender,
+      jenis_kelamin: item.jenis_kelamin,
       email: item.email,
     });
 
@@ -148,7 +148,7 @@ function MahasiswaPage() {
           nama: "",
           nim: "",
           jurusan: "",
-          gender: "",
+          jenis_kelamin: "",
           email: "",
         });
 
@@ -220,15 +220,15 @@ function MahasiswaPage() {
             search.toLowerCase()
           );
 
-      const matchGender =
-        genderFilter === ""
+      const matchJenisKelamin =
+        jenisKelaminFilter === ""
           ? true
-          : item.gender ===
-            genderFilter;
+          : item.jenis_kelamin ===
+            jenisKelaminFilter;
 
       return (
         matchSearch &&
-        matchGender
+        matchJenisKelamin
       );
 
     });
@@ -265,7 +265,7 @@ function MahasiswaPage() {
         "Nama",
         "NIM",
         "Jurusan",
-        "Gender",
+        "Jenis Kelamin",
         "Email",
       ]],
 
@@ -276,7 +276,7 @@ function MahasiswaPage() {
             item.nama,
             item.nim,
             item.jurusan,
-            item.gender,
+            item.jenis_kelamin,
             item.email,
 
           ]
@@ -347,7 +347,7 @@ function MahasiswaPage() {
                     nama: "",
                     nim: "",
                     jurusan: "",
-                    gender: "",
+                    jenis_kelamin: "",
                     email: "",
                   });
 
@@ -394,14 +394,14 @@ function MahasiswaPage() {
               />
 
               <select
-                name="gender"
-                value={form.gender}
+                name="jenis_kelamin"
+                value={form.jenis_kelamin}
                 onChange={handleChange}
                 className="border border-gray-300 p-4 rounded-2xl"
               >
 
                 <option value="">
-                  Pilih Gender
+                  Pilih Jenis Kelamin
                 </option>
 
                 <option value="Laki-laki">
@@ -464,9 +464,9 @@ function MahasiswaPage() {
             </div>
 
             <select
-              value={genderFilter}
+              value={jenisKelaminFilter}
               onChange={(e) =>
-                setGenderFilter(
+                setJenisKelaminFilter(
                   e.target.value
                 )
               }
@@ -474,7 +474,7 @@ function MahasiswaPage() {
             >
 
               <option value="">
-                Semua Gender
+                Semua Jenis Kelamin
               </option>
 
               <option value="Laki-laki">
@@ -524,7 +524,7 @@ function MahasiswaPage() {
                   </th>
 
                   <th className="p-5 text-left">
-                    Gender
+                    Jenis Kelamin
                   </th>
 
                   <th className="p-5 text-left">
@@ -570,7 +570,7 @@ function MahasiswaPage() {
                               px-4 py-2 rounded-full text-sm font-semibold
 
                               ${
-                                item.gender ===
+                                item.jenis_kelamin ===
                                 "Laki-laki"
                                   ? "bg-blue-100 text-blue-700"
                                   : "bg-pink-100 text-pink-700"
@@ -578,7 +578,7 @@ function MahasiswaPage() {
                             `}
                           >
 
-                            {item.gender}
+                            {item.jenis_kelamin}
 
                           </span>
 
