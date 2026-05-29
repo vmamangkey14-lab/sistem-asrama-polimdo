@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://sistem-asrama-polimdo-production.up.railway.app",
 });
 
 // otomatis kirim token (mahasiswa atau admin)
