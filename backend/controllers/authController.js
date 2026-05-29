@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
       nama,
       nim,
       jurusan,
-      gender,
+      jenis_kelamin,
       no_hp,
       email,
       password,
