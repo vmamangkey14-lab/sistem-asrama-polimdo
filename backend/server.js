@@ -18,16 +18,13 @@ const path = require("path");
 const app = express();
 
 // =====================================
-// 🔥 CORS FIX FINAL (WAJIB)
+// 🔥 CORS FIX PALING AMAN
 // =====================================
 app.use(cors({
-  origin: "https://stellar-paprenjak-d14c3c.netlify.app",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  origin: "*", // sementara biar pasti lolos
 }));
 
-// 🔥 HANDLE PREFLIGHT (INI YANG KAMU KURANGIN)
+// HANDLE PREFLIGHT
 app.options("*", cors());
 
 // =====================================
@@ -48,47 +45,10 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/pembayaran", pembayaranRoutes);
 
 // =====================================
-// PROTECTED TEST
-// =====================================
-app.get("/api/protected", verifyToken, (req, res) => {
-  res.json({
-    message: "Akses berhasil",
-    user: req.user,
-  });
-});
-
-// =====================================
-// ROOT
+// TEST
 // =====================================
 app.get("/", (req, res) => {
   res.send("API Sistem Asrama Berjalan...");
-});
-
-// =====================================
-// DEBUG DATABASE
-// =====================================
-app.get("/test-db", async (req, res) => {
-  try {
-    const [mahasiswaCols] = await db.query("DESCRIBE mahasiswa");
-    const [pendaftaranCols] = await db.query("DESCRIBE pendaftaran");
-
-    res.json({
-      message: "Database connected successfully",
-      mahasiswa_schema: mahasiswaCols.map(c => ({
-        Field: c.Field,
-        Type: c.Type,
-      })),
-      pendaftaran_schema: pendaftaranCols.map(c => ({
-        Field: c.Field,
-        Type: c.Type,
-      })),
-    });
-  } catch (err) {
-    res.status(500).json({
-      error: err.message,
-      stack: err.stack,
-    });
-  }
 });
 
 // =====================================
