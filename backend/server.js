@@ -50,13 +50,18 @@ app.get("/", (req, res) => {
 
 app.get("/test-db", async (req, res) => {
   try {
-    const [result] = await db.query("SELECT 1");
+    const [mahasiswaCols] = await db.query("DESCRIBE mahasiswa");
+    const [pendaftaranCols] = await db.query("DESCRIBE pendaftaran");
     res.json({
-      message: "Database connected",
-      result,
+      message: "Database connected successfully",
+      mahasiswa_schema: mahasiswaCols.map(c => ({ Field: c.Field, Type: c.Type })),
+      pendaftaran_schema: pendaftaranCols.map(c => ({ Field: c.Field, Type: c.Type })),
     });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({
+      error: err.message,
+      stack: err.stack
+    });
   }
 });
 
