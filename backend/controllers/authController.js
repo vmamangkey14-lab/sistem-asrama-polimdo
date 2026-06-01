@@ -58,7 +58,7 @@ exports.register = async (req, res) => {
       (mahasiswa_id, kamar_id, tanggal_daftar, status_pendaftaran)
       VALUES (?, ?, NOW(), ?)
       `,
-      [mahasiswaId, 0, "Menunggu Verifikasi"]
+      [mahasiswaId, null, "Menunggu Verifikasi"]
     );
 
     res.status(201).json({
