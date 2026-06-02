@@ -73,7 +73,7 @@ exports.getStatusMahasiswa = async (req, res) => {
     p.status_pendaftaran,
     p.status_pendaftaran as status,
     k.nomor_kamar,
-    k.jenis_kamar AS jenis_asrama
+    k.jenis_asrama
   FROM pendaftaran p
   LEFT JOIN kamar k
     ON p.kamar_id = k.id
@@ -110,7 +110,7 @@ exports.getAllPendaftaran = async (req, res) => {
     m.gender,
     m.email,
     k.nomor_kamar,
-    k.jenis_kamar AS jenis_asrama
+    k.jenis_asrama
   FROM pendaftaran p
   JOIN mahasiswa m
     ON p.mahasiswa_id = m.id
@@ -195,7 +195,7 @@ exports.approvePendaftaran = async (req, res) => {
     // VALIDASI GENDER
     if (
       pendaftaran.gender === "Laki-laki" &&
-      kamar.jenis_kamar === "Asrama Putri"
+      kamar.jenis_asrama === "Asrama Putri"
     ) {
       return res.status(400).json({
         message: "Mahasiswa laki-laki tidak bisa masuk asrama putri",
@@ -204,7 +204,7 @@ exports.approvePendaftaran = async (req, res) => {
 
     if (
       pendaftaran.gender === "Perempuan" &&
-      kamar.jenis_kamar === "Asrama Putra"
+      kamar.jenis_asrama === "Asrama Putra"
     ) {
       return res.status(400).json({
         message: "Mahasiswa perempuan tidak bisa masuk asrama putra",
@@ -216,7 +216,12 @@ exports.approvePendaftaran = async (req, res) => {
       await db.query(
         `
         UPDATE kamar
-        SET terisi = GREATEST(0, terisi - 1)
+        SET
+          terisi = GREATEST(0, terisi - 1),
+          status = CASE
+            WHEN GREATEST(0, terisi - 1) >= kapasitas THEN 'Penuh'
+            ELSE 'Tersedia'
+          END
         WHERE id = ?
         `,
         [pendaftaran.kamar_id]
@@ -244,7 +249,12 @@ exports.approvePendaftaran = async (req, res) => {
       await db.query(
         `
         UPDATE kamar
-        SET terisi = terisi + 1
+        SET
+          terisi = terisi + 1,
+          status = CASE
+            WHEN (terisi + 1) >= kapasitas THEN 'Penuh'
+            ELSE 'Tersedia'
+          END
         WHERE id = ?
         `,
         [finalKamarId]
@@ -292,7 +302,12 @@ exports.rejectPendaftaran = async (req, res) => {
       await db.query(
         `
         UPDATE kamar
-        SET terisi = GREATEST(0, terisi - 1)
+        SET
+          terisi = GREATEST(0, terisi - 1),
+          status = CASE
+            WHEN GREATEST(0, terisi - 1) >= kapasitas THEN 'Penuh'
+            ELSE 'Tersedia'
+          END
         WHERE id = ?
         `,
         [pendaftaran.kamar_id]
@@ -331,6 +346,37 @@ exports.rejectPendaftaran = async (req, res) => {
 exports.reopenPendaftaran = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Cek apakah pendaftaran sebelumnya punya kamar yang perlu dibebaskan
+    const [pendaftaranRows] = await db.query(
+      `
+      SELECT *
+      FROM pendaftaran
+      WHERE id = ?
+      `,
+      [id]
+    );
+
+    if (pendaftaranRows.length > 0) {
+      const pendaftaran = pendaftaranRows[0];
+
+      // Jika sudah ditempatkan, bebaskan kamar lama
+      if (pendaftaran.status_pendaftaran === "Sudah Ditempatkan" && pendaftaran.kamar_id) {
+        await db.query(
+          `
+          UPDATE kamar
+          SET
+            terisi = GREATEST(0, terisi - 1),
+            status = CASE
+              WHEN GREATEST(0, terisi - 1) >= kapasitas THEN 'Penuh'
+              ELSE 'Tersedia'
+            END
+          WHERE id = ?
+          `,
+          [pendaftaran.kamar_id]
+        );
+      }
+    }
 
     await db.query(
       `

@@ -9,9 +9,13 @@ exports.getAllKamar = async (req, res) => {
       SELECT
         id,
         nomor_kamar,
-        jenis_kamar AS jenis_asrama,
+        jenis_asrama,
         kapasitas,
-        terisi
+        terisi,
+        CASE
+          WHEN terisi >= kapasitas THEN 'Penuh'
+          ELSE 'Tersedia'
+        END AS status
       FROM kamar
       ORDER BY id DESC
     `);
@@ -52,11 +56,12 @@ exports.createKamar = async (req, res) => {
       INSERT INTO kamar
       (
         nomor_kamar,
-        jenis_kamar,
+        jenis_asrama,
         kapasitas,
-        terisi
+        terisi,
+        status
       )
-      VALUES (?, ?, ?, 0)
+      VALUES (?, ?, ?, 0, 'Tersedia')
       `,
       [
         nomor_kamar,
@@ -91,18 +96,24 @@ exports.updateKamar = async (req, res) => {
       kapasitas,
     } = req.body;
 
+    // Update data kamar dan recalculate status
     await db.query(
       `
       UPDATE kamar
       SET
         nomor_kamar = ?,
-        jenis_kamar = ?,
-        kapasitas = ?
+        jenis_asrama = ?,
+        kapasitas = ?,
+        status = CASE
+          WHEN terisi >= ? THEN 'Penuh'
+          ELSE 'Tersedia'
+        END
       WHERE id = ?
       `,
       [
         nomor_kamar,
         jenis_asrama,
+        kapasitas,
         kapasitas,
         id,
       ]
