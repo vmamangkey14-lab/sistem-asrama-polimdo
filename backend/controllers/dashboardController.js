@@ -27,7 +27,7 @@ const getDashboardStats = async (
         .query(`
           SELECT COUNT(*) as total
           FROM kamar
-          WHERE status = 'Tersedia'
+          WHERE terisi < kapasitas
         `);
 
     // sudah ditempatkan
