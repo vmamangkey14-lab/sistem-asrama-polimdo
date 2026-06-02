@@ -11,14 +11,14 @@ exports.register = async (req, res) => {
       nama,
       nim,
       jurusan,
-      gender,
+      jenis_kelamin,
       no_hp,
       email,
       password,
     } = req.body;
 
     // VALIDASI
-    if (!nama || !nim || !jurusan || !gender || !no_hp || !email || !password) {
+    if (!nama || !nim || !jurusan || !jenis_kelamin || !no_hp || !email || !password) {
       return res.status(400).json({
         message: "Semua field wajib diisi",
       });
@@ -43,10 +43,10 @@ exports.register = async (req, res) => {
     const [result] = await db.query(
       `
       INSERT INTO mahasiswa
-      (nama, nim, jurusan, gender, no_hp, email, password)
+      (nama, nim, jurusan, jenis_kelamin, no_hp, email, password)
       VALUES (?, ?, ?, ?, ?, ?, ?)
       `,
-      [nama, nim, jurusan, gender, no_hp, email, hashedPassword]
+      [nama, nim, jurusan, jenis_kelamin, no_hp, email, hashedPassword]
     );
 
     const mahasiswaId = result.insertId;

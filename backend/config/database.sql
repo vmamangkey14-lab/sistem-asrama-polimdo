@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS mahasiswa (
   nama VARCHAR(255) NOT NULL,
   nim VARCHAR(50) NOT NULL UNIQUE,
   jurusan VARCHAR(100) NOT NULL,
-  gender ENUM('Laki-laki', 'Perempuan') NOT NULL,
+  jenis_kelamin ENUM('Laki-laki', 'Perempuan') NOT NULL,
   no_hp VARCHAR(20) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
