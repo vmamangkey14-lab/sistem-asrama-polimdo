@@ -3,59 +3,60 @@ const db = require("../config/db");
 // ======================================
 // GET ALL KAMAR
 // ======================================
-
 exports.getAllKamar = async (req, res) => {
-
   try {
-
-    const [rows] = await db.query(
-      `
-      SELECT *
+    const [rows] = await db.query(`
+      SELECT
+        id,
+        nomor_kamar,
+        jenis_kamar AS jenis_asrama,
+        kapasitas,
+        terisi
       FROM kamar
       ORDER BY id DESC
-      `
-    );
+    `);
 
     res.status(200).json(rows);
-
   } catch (error) {
-
-    console.log(error);
+    console.error("GET KAMAR ERROR:", error);
 
     res.status(500).json({
-      message:
-        "Server error",
+      message: error.message,
     });
-
   }
-
 };
 
 // ======================================
 // TAMBAH KAMAR
 // ======================================
-
 exports.createKamar = async (req, res) => {
-
   try {
-
     const {
       nomor_kamar,
       jenis_asrama,
       kapasitas,
     } = req.body;
 
+    if (
+      !nomor_kamar ||
+      !jenis_asrama ||
+      !kapasitas
+    ) {
+      return res.status(400).json({
+        message: "Semua field wajib diisi",
+      });
+    }
+
     await db.query(
       `
       INSERT INTO kamar
       (
         nomor_kamar,
-        jenis_asrama,
+        jenis_kamar,
         kapasitas,
-        terisi,
-        status
+        terisi
       )
-      VALUES (?, ?, ?, 0, 'Tersedia')
+      VALUES (?, ?, ?, 0)
       `,
       [
         nomor_kamar,
@@ -65,38 +66,29 @@ exports.createKamar = async (req, res) => {
     );
 
     res.status(201).json({
-      message:
-        "Kamar berhasil ditambahkan",
+      message: "Kamar berhasil ditambahkan",
     });
 
   } catch (error) {
-
-    console.log(error);
+    console.error("CREATE KAMAR ERROR:", error);
 
     res.status(500).json({
-      message:
-        "Server error",
+      message: error.message,
     });
-
   }
-
 };
 
 // ======================================
 // UPDATE KAMAR
 // ======================================
-
 exports.updateKamar = async (req, res) => {
-
   try {
-
     const { id } = req.params;
 
     const {
       nomor_kamar,
       jenis_asrama,
       kapasitas,
-      status,
     } = req.body;
 
     await db.query(
@@ -104,46 +96,36 @@ exports.updateKamar = async (req, res) => {
       UPDATE kamar
       SET
         nomor_kamar = ?,
-        jenis_asrama = ?,
-        kapasitas = ?,
-        status = ?
+        jenis_kamar = ?,
+        kapasitas = ?
       WHERE id = ?
       `,
       [
         nomor_kamar,
         jenis_asrama,
         kapasitas,
-        status,
         id,
       ]
     );
 
     res.status(200).json({
-      message:
-        "Kamar berhasil diupdate",
+      message: "Kamar berhasil diupdate",
     });
 
   } catch (error) {
-
-    console.log(error);
+    console.error("UPDATE KAMAR ERROR:", error);
 
     res.status(500).json({
-      message:
-        "Server error",
+      message: error.message,
     });
-
   }
-
 };
 
 // ======================================
 // DELETE KAMAR
 // ======================================
-
 exports.deleteKamar = async (req, res) => {
-
   try {
-
     const { id } = req.params;
 
     await db.query(
@@ -155,19 +137,14 @@ exports.deleteKamar = async (req, res) => {
     );
 
     res.status(200).json({
-      message:
-        "Kamar berhasil dihapus",
+      message: "Kamar berhasil dihapus",
     });
 
   } catch (error) {
-
-    console.log(error);
+    console.error("DELETE KAMAR ERROR:", error);
 
     res.status(500).json({
-      message:
-        "Server error",
+      message: error.message,
     });
-
   }
-
 };
