@@ -66,19 +66,19 @@ exports.getStatusMahasiswa = async (req, res) => {
 
     const [rows] = await db.query(
       `
-      SELECT
-        p.id,
-        p.mahasiswa_id,
-        p.kamar_id,
-        p.status_pendaftaran,
-        p.status_pendaftaran as status,
-        k.nomor_kamar,
-        k.jenis_asrama
-      FROM pendaftaran p
-      LEFT JOIN kamar k
-        ON p.kamar_id = k.id
-      WHERE p.mahasiswa_id = ?
-      `,
+  SELECT
+    p.id,
+    p.mahasiswa_id,
+    p.kamar_id,
+    p.status_pendaftaran,
+    p.status_pendaftaran as status,
+    k.nomor_kamar,
+    k.jenis_kamar AS jenis_asrama
+  FROM pendaftaran p
+  LEFT JOIN kamar k
+    ON p.kamar_id = k.id
+  WHERE p.mahasiswa_id = ?
+  `,
       [mahasiswa_id]
     );
 
@@ -98,26 +98,26 @@ exports.getAllPendaftaran = async (req, res) => {
   try {
     const [rows] = await db.query(
       `
-      SELECT
-        p.id,
-        p.mahasiswa_id,
-        p.kamar_id,
-        p.status_pendaftaran,
-        p.status_pendaftaran as status,
-        m.nama,
-        m.nim,
-        m.jurusan,
-        m.gender,
-        m.email,
-        k.nomor_kamar,
-        k.jenis_asrama
-      FROM pendaftaran p
-      JOIN mahasiswa m
-        ON p.mahasiswa_id = m.id
-      LEFT JOIN kamar k
-        ON p.kamar_id = k.id
-      ORDER BY p.id DESC
-      `
+  SELECT
+    p.id,
+    p.mahasiswa_id,
+    p.kamar_id,
+    p.status_pendaftaran,
+    p.status_pendaftaran as status,
+    m.nama,
+    m.nim,
+    m.jurusan,
+    m.gender,
+    m.email,
+    k.nomor_kamar,
+    k.jenis_kamar AS jenis_asrama
+  FROM pendaftaran p
+  JOIN mahasiswa m
+    ON p.mahasiswa_id = m.id
+  LEFT JOIN kamar k
+    ON p.kamar_id = k.id
+  ORDER BY p.id DESC
+  `
     );
 
     res.status(200).json(rows);
@@ -195,7 +195,7 @@ exports.approvePendaftaran = async (req, res) => {
     // VALIDASI GENDER
     if (
       pendaftaran.gender === "Laki-laki" &&
-      kamar.jenis_asrama === "Asrama Putri"
+      kamar.jenis_kamar === "Asrama Putri"
     ) {
       return res.status(400).json({
         message: "Mahasiswa laki-laki tidak bisa masuk asrama putri",
@@ -204,7 +204,7 @@ exports.approvePendaftaran = async (req, res) => {
 
     if (
       pendaftaran.gender === "Perempuan" &&
-      kamar.jenis_asrama === "Asrama Putra"
+      kamar.jenis_kamar === "Asrama Putra"
     ) {
       return res.status(400).json({
         message: "Mahasiswa perempuan tidak bisa masuk asrama putra",
