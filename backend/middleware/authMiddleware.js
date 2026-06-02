@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
 
   if (!authHeader) {
     return res.status(401).json({
-      message: "Token tidak ada",
+      message: "Akses ditolak, token tidak ditemukan",
     });
   }
 
@@ -15,7 +15,7 @@ const verifyToken = (req, res, next) => {
 
   if (!token) {
     return res.status(401).json({
-      message: "Token invalid",
+      message: "Format token tidak valid",
     });
   }
 
@@ -31,10 +31,15 @@ const verifyToken = (req, res, next) => {
 
     next();
   } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: "Sesi Anda telah berakhir, silakan login kembali",
+      });
+    }
     return res.status(403).json({
-      message: "Token tidak valid",
+      message: "Token tidak valid atau tidak dikenali",
     });
   }
 };
 
-module.exports = verifyToken;
+module.exports = verifyToken;

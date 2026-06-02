@@ -1,14 +1,27 @@
 import axios from "axios";
 
 // =====================================
-// BASE URL BACKEND (SUDAH FIX)
+// BASE URL BACKEND
 // =====================================
+const API_URL = import.meta.env.VITE_API_URL || "https://sistem-asrama-polimdo-production.up.railway.app/api";
+
 const API = axios.create({
-  baseURL: "https://sistem-asrama-polimdo-production.up.railway.app/api",
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+// Dynamic base URL for uploaded files
+export const UPLOADS_BASE_URL = API_URL.endsWith("/api")
+  ? API_URL.slice(0, -4) + "/uploads"
+  : API_URL + "/uploads";
+
+export const getUploadUrl = (filename) => {
+  if (!filename) return null;
+  if (filename.startsWith("http://") || filename.startsWith("https://")) return filename;
+  return `${UPLOADS_BASE_URL}/${filename}`;
+};
 
 // =====================================
 // REQUEST INTERCEPTOR (AUTO TOKEN)

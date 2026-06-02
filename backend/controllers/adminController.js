@@ -41,16 +41,17 @@ exports.loginAdmin = async (req, res) => {
     const admin = rows[0];
 
     // CEK PASSWORD
-
-    const isMatch = password === admin.password;
+    let isMatch = false;
+    if (admin.password.startsWith("$2a$") || admin.password.startsWith("$2b$")) {
+      isMatch = await bcrypt.compare(password, admin.password);
+    } else {
+      isMatch = password === admin.password;
+    }
 
     if (!isMatch) {
-
       return res.status(400).json({
-        message:
-          "Password salah",
+        message: "Password salah",
       });
-
     }
 
     // TOKEN

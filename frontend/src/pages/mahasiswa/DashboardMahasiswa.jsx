@@ -13,7 +13,7 @@ import {
 } from "react";
 
 import jsPDF from "jspdf";
-import API from "../../services/api";
+import API, { getUploadUrl } from "../../services/api";
 
 import MahasiswaLayout
 from "../../layouts/MahasiswaLayout";
@@ -206,9 +206,7 @@ function DashboardMahasiswa() {
   const handleCetakKartu = async () => {
     try {
       const logoUrl = "/logo-polimdo.png";
-      const photoUrl = user.foto_profile
-        ? `http://localhost:5000/uploads/${user.foto_profile}`
-        : null;
+      const photoUrl = getUploadUrl(user.foto_profile);
 
       // Load images to base64
       const [logoBase64, photoBase64] = await Promise.all([
@@ -379,7 +377,7 @@ function DashboardMahasiswa() {
           <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white/20 mb-4 flex items-center justify-center bg-white/10">
             {user?.foto_profile ? (
               <img
-                src={`http://localhost:5000/uploads/${user.foto_profile}`}
+                src={getUploadUrl(user.foto_profile)}
                 alt="profile"
                 className="w-full h-full object-cover"
               />
@@ -752,7 +750,7 @@ function DashboardMahasiswa() {
                         <p className="text-[9px] text-amber-700 font-bold uppercase tracking-wider mb-1">Pratinjau Bukti:</p>
                         <div className="w-28 h-20 rounded-xl overflow-hidden border border-amber-200 bg-white">
                           <img
-                            src={`http://localhost:5000/uploads/${pembayaran.bukti_pembayaran}`}
+                            src={getUploadUrl(pembayaran.bukti_pembayaran)}
                             alt="preview"
                             className="w-full h-full object-cover"
                           />

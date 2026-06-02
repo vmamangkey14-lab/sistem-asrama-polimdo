@@ -11,7 +11,8 @@ const {
   getAllMahasiswa,
   updateMahasiswa,
   deleteMahasiswa,
-  uploadFotoProfile
+  uploadFotoProfile,
+  getProfile,
 } = require("../controllers/mahasiswaController");
 
 
@@ -21,6 +22,13 @@ router.get(
   verifyToken,
   verifyAdmin,
   getAllMahasiswa
+);
+
+// GET PROFILE (Student self)
+router.get(
+  "/profile",
+  verifyToken,
+  getProfile
 );
 
 // UPDATE (Admin Only)

@@ -18,17 +18,40 @@ const path = require("path");
 const app = express();
 
 // =====================================
-// 🔥 CORS FIX PALING AMAN
+// 🔥 CORS FIX PALING AMAN & FLEXIBLE
 // =====================================
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : ["http://localhost:5173", "http://localhost:3000"];
+
 app.use(cors({
-  origin: "*",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes("*")) {
+      callback(null, true);
+    } else {
+      if (process.env.NODE_ENV !== "production") {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    }
+  },
+  credentials: true
 }));
 
 // =====================================
-// MIDDLEWARE
+// MIDDLEWARE & STATIC DIR
 // =====================================
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Ensure uploads folder exists
+const fs = require("fs");
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+app.use("/uploads", express.static(uploadDir));
 
 // =====================================
 // ROUTES

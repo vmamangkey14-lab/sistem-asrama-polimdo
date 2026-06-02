@@ -20,10 +20,11 @@ CREATE TABLE IF NOT EXISTS mahasiswa (
   nama VARCHAR(255) NOT NULL,
   nim VARCHAR(50) NOT NULL UNIQUE,
   jurusan VARCHAR(100) NOT NULL,
-  jenis_kelamin ENUM('Laki-laki', 'Perempuan') NOT NULL,
+  gender ENUM('Laki-laki', 'Perempuan') NOT NULL,
   no_hp VARCHAR(20) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
+  foto_profile VARCHAR(255) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -49,3 +50,14 @@ CREATE TABLE IF NOT EXISTS pendaftaran (
   FOREIGN KEY (mahasiswa_id) REFERENCES mahasiswa(id) ON DELETE CASCADE,
   FOREIGN KEY (kamar_id) REFERENCES kamar(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
+
+-- 5. Tabel Pembayaran
+CREATE TABLE IF NOT EXISTS pembayaran (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pendaftaran_id INT NOT NULL,
+  bukti_pembayaran VARCHAR(255) NOT NULL,
+  status_pembayaran ENUM('Menunggu', 'Lunas', 'Ditolak') NOT NULL DEFAULT 'Menunggu',
+  tanggal_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (pendaftaran_id) REFERENCES pendaftaran(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+

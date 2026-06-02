@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 
-import API from "../../services/api";
+import API, { getUploadUrl } from "../../services/api";
 import AdminLayout from "../../layouts/AdminLayout";
 
 function PembayaranPage() {
@@ -176,7 +176,7 @@ function PembayaranPage() {
                           <div className="flex flex-col items-center gap-1.5">
                             <div className="w-16 h-12 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center relative group mx-auto">
                               <img
-                                src={`http://localhost:5000/uploads/${item.bukti_pembayaran}`}
+                                src={getUploadUrl(item.bukti_pembayaran)}
                                 alt="bukti"
                                 className="w-full h-full object-cover"
                               />
@@ -278,7 +278,7 @@ function PembayaranPage() {
             </div>
             <div className="p-6 bg-slate-50 flex justify-center items-center max-h-[70vh] overflow-y-auto">
               <img
-                src={`http://localhost:5000/uploads/${selectedImage}`}
+                src={getUploadUrl(selectedImage)}
                 alt="bukti detail"
                 className="max-w-full max-h-[60vh] object-contain rounded-xl shadow-md border border-gray-200"
               />

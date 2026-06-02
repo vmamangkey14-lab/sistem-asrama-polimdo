@@ -10,7 +10,8 @@ const {
   reopenPendaftaran,
 } = require("../controllers/pendaftaranController");
 
-const authMiddleware = require("../middleware/authMiddleware");
+const verifyToken = require("../middleware/authMiddleware");
+const verifyAdmin = require("../middleware/adminMiddleware");
 
 // ======================================
 // MAHASISWA
@@ -19,20 +20,20 @@ const authMiddleware = require("../middleware/authMiddleware");
 // DAFTAR ASRAMA / BUAT PENDAFTARAN
 router.post(
   "/create",
-  authMiddleware,
+  verifyToken,
   createPendaftaran
 );
 
 // LIHAT STATUS PENDAFTARAN MAHASISWA SENDIRI
 router.get(
   "/status",
-  authMiddleware,
+  verifyToken,
   getStatusMahasiswa
 );
 
 // Fallbacks for backward compatibility
-router.post("/daftar", authMiddleware, createPendaftaran);
-router.post("/", authMiddleware, createPendaftaran);
+router.post("/daftar", verifyToken, createPendaftaran);
+router.post("/", verifyToken, createPendaftaran);
 
 // ======================================
 // ADMIN
@@ -41,35 +42,45 @@ router.post("/", authMiddleware, createPendaftaran);
 // GET ALL PENDAFTARAN
 router.get(
   "/all",
+  verifyToken,
+  verifyAdmin,
   getAllPendaftaran
 );
 
 router.get(
   "/",
+  verifyToken,
+  verifyAdmin,
   getAllPendaftaran
 );
 
 // APPROVE
 router.put(
   "/approve/:id",
+  verifyToken,
+  verifyAdmin,
   approvePendaftaran
 );
 
 // REJECT
 router.put(
   "/reject/:id",
+  verifyToken,
+  verifyAdmin,
   rejectPendaftaran
 );
 
 // REOPEN
 router.put(
   "/reopen/:id",
+  verifyToken,
+  verifyAdmin,
   reopenPendaftaran
 );
 
 // Fallbacks for backward compatibility
-router.put("/verifikasi/:id", approvePendaftaran);
-router.put("/tolak/:id", rejectPendaftaran);
-router.put("/tempatkan/:id", approvePendaftaran);
+router.put("/verifikasi/:id", verifyToken, verifyAdmin, approvePendaftaran);
+router.put("/tolak/:id", verifyToken, verifyAdmin, rejectPendaftaran);
+router.put("/tempatkan/:id", verifyToken, verifyAdmin, approvePendaftaran);
 
 module.exports = router;

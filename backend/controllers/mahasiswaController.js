@@ -174,10 +174,38 @@ const uploadFotoProfile = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  try {
+    const mahasiswaId = req.user.id;
+    const sql = `
+      SELECT
+        id,
+        nama,
+        nim,
+        jurusan,
+        gender,
+        no_hp,
+        email,
+        foto_profile
+      FROM mahasiswa
+      WHERE id = ?
+    `;
+
+    const [rows] = await db.query(sql, [mahasiswaId]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Mahasiswa tidak ditemukan" });
+    }
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 module.exports = {
   getAllMahasiswa,
   updateMahasiswa,
   deleteMahasiswa,
   uploadFotoProfile,
+  getProfile,
 };
