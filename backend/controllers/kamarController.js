@@ -23,7 +23,6 @@ exports.getAllKamar = async (req, res) => {
     res.status(200).json(rows);
   } catch (error) {
     console.error("GET KAMAR ERROR:", error);
-
     res.status(500).json({
       message: error.message,
     });
@@ -76,7 +75,6 @@ exports.createKamar = async (req, res) => {
 
   } catch (error) {
     console.error("CREATE KAMAR ERROR:", error);
-
     res.status(500).json({
       message: error.message,
     });
@@ -95,6 +93,16 @@ exports.updateKamar = async (req, res) => {
       jenis_asrama,
       kapasitas,
     } = req.body;
+
+    if (
+      !nomor_kamar ||
+      !jenis_asrama ||
+      !kapasitas
+    ) {
+      return res.status(400).json({
+        message: "Semua field wajib diisi",
+      });
+    }
 
     // Update data kamar dan recalculate status
     await db.query(
@@ -125,7 +133,6 @@ exports.updateKamar = async (req, res) => {
 
   } catch (error) {
     console.error("UPDATE KAMAR ERROR:", error);
-
     res.status(500).json({
       message: error.message,
     });
@@ -153,7 +160,6 @@ exports.deleteKamar = async (req, res) => {
 
   } catch (error) {
     console.error("DELETE KAMAR ERROR:", error);
-
     res.status(500).json({
       message: error.message,
     });

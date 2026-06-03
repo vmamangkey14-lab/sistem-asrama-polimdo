@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const multer = require("multer");
 require("dotenv").config();
 
 const db = require("./config/db");
@@ -21,22 +22,31 @@ const app = express();
 // 🔥 CORS FIX PALING AMAN & FLEXIBLE
 // =====================================
 const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",")
+  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
   : ["http://localhost:5173", "http://localhost:3000"];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes("*")) {
+    // Izinkan request tanpa origin (seperti curl, mobile app, postman, dll)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin matches allowed list, wildcard '*', or ends with .netlify.app
+    const isAllowed = allowedOrigins.some(o => o === "*" || o.replace(/\/$/, "") === origin.replace(/\/$/, "")) ||
+                      origin.endsWith(".netlify.app");
+
+    if (isAllowed) {
       callback(null, true);
     } else {
       if (process.env.NODE_ENV !== "production") {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.warn(`[CORS] Blocked origin in production: ${origin}`);
+        callback(null, false);
       }
     }
   },
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
 
 // =====================================
@@ -69,6 +79,24 @@ app.use("/api/pembayaran", pembayaranRoutes);
 // =====================================
 app.get("/", (req, res) => {
   res.send("API Sistem Asrama Berjalan...");
+});
+
+// =====================================
+// GLOBAL ERROR HANDLER (Multer & General Errors)
+// =====================================
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    console.error("🔥 Multer error:", err);
+    return res.status(400).json({
+      message: `File upload error: ${err.message}`,
+    });
+  } else if (err) {
+    console.error("🔥 General error:", err);
+    return res.status(500).json({
+      message: err.message || "Terjadi kesalahan pada server",
+    });
+  }
+  next();
 });
 
 // =====================================

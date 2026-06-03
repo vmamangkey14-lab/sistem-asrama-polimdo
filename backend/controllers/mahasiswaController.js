@@ -3,11 +3,7 @@ const db = require("../config/db");
 // ======================
 // GET ALL MAHASISWA
 // ======================
-
-const getAllMahasiswa = async (
-  req,
-  res
-) => {
+const getAllMahasiswa = async (req, res) => {
   try {
     const sql = `
       SELECT
@@ -25,7 +21,7 @@ const getAllMahasiswa = async (
     const [result] = await db.query(sql);
     res.json(result);
   } catch (err) {
-    console.error(err);
+    console.error("🔥 ERROR GET ALL MAHASISWA:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -33,11 +29,7 @@ const getAllMahasiswa = async (
 // ======================
 // UPDATE MAHASISWA
 // ======================
-
-const updateMahasiswa = async (
-  req,
-  res
-) => {
+const updateMahasiswa = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -76,7 +68,7 @@ const updateMahasiswa = async (
       message: "Mahasiswa berhasil diupdate",
     });
   } catch (err) {
-    console.error(err);
+    console.error("🔥 ERROR UPDATE MAHASISWA:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -84,11 +76,7 @@ const updateMahasiswa = async (
 // ======================
 // DELETE MAHASISWA
 // ======================
-
-const deleteMahasiswa = async (
-  req,
-  res
-) => {
+const deleteMahasiswa = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -101,10 +89,19 @@ const deleteMahasiswa = async (
     if (pendaftaranRows.length > 0) {
       const pendaftaran = pendaftaranRows[0];
       
-      // Jika statusnya 'Sudah Ditempatkan' dan ada kamar_id, kurangi terisi kamar tersebut
+      // Jika statusnya 'Sudah Ditempatkan' dan ada kamar_id, kurangi terisi kamar tersebut & update status kamar
       if (pendaftaran.status_pendaftaran === "Sudah Ditempatkan" && pendaftaran.kamar_id) {
         await db.query(
-          `UPDATE kamar SET terisi = GREATEST(0, terisi - 1) WHERE id = ?`,
+          `
+          UPDATE kamar 
+          SET 
+            terisi = GREATEST(0, terisi - 1),
+            status = CASE 
+              WHEN GREATEST(0, terisi - 1) >= kapasitas THEN 'Penuh'
+              ELSE 'Tersedia'
+            END
+          WHERE id = ?
+          `,
           [pendaftaran.kamar_id]
         );
       }
@@ -128,7 +125,7 @@ const deleteMahasiswa = async (
       message: "Mahasiswa berhasil dihapus",
     });
   } catch (err) {
-    console.error(err);
+    console.error("🔥 ERROR DELETE MAHASISWA:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -137,7 +134,6 @@ const deleteMahasiswa = async (
 // ======================
 // UPLOAD FOTO PROFILE
 // ======================
-
 const uploadFotoProfile = async (req, res) => {
   try {
     const mahasiswaId = req.user.id;
@@ -169,11 +165,14 @@ const uploadFotoProfile = async (req, res) => {
       foto_profile: fotoPath,
     });
   } catch (error) {
-    console.error(error);
+    console.error("🔥 ERROR UPLOAD FOTO PROFILE:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
+// ======================
+// GET PROFILE
+// ======================
 const getProfile = async (req, res) => {
   try {
     const mahasiswaId = req.user.id;
@@ -197,7 +196,7 @@ const getProfile = async (req, res) => {
     }
     res.json(rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error("🔥 ERROR GET PROFILE:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -208,4 +207,4 @@ module.exports = {
   deleteMahasiswa,
   uploadFotoProfile,
   getProfile,
-};
+};

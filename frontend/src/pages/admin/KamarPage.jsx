@@ -73,6 +73,11 @@ function KamarPage() {
 
     e.preventDefault();
 
+    if (!form.nomor_kamar || !form.jenis_asrama || !form.kapasitas) {
+      alert("Semua field wajib diisi");
+      return;
+    }
+
     try {
 
       if (editId) {
@@ -108,7 +113,7 @@ function KamarPage() {
     } catch (error) {
 
       alert(
-        error.response?.data?.message
+        error.response?.data?.message || "Gagal menyimpan data kamar"
       );
 
     }

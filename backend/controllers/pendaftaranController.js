@@ -50,7 +50,7 @@ exports.createPendaftaran = async (req, res) => {
       message: "Pendaftaran asrama berhasil diajukan",
     });
   } catch (error) {
-    console.log(error);
+    console.error("🔥 ERROR CREATE PENDAFTARAN:", error);
     res.status(500).json({
       message: "Server error",
     });
@@ -66,25 +66,25 @@ exports.getStatusMahasiswa = async (req, res) => {
 
     const [rows] = await db.query(
       `
-  SELECT
-    p.id,
-    p.mahasiswa_id,
-    p.kamar_id,
-    p.status_pendaftaran,
-    p.status_pendaftaran as status,
-    k.nomor_kamar,
-    k.jenis_asrama
-  FROM pendaftaran p
-  LEFT JOIN kamar k
-    ON p.kamar_id = k.id
-  WHERE p.mahasiswa_id = ?
-  `,
+      SELECT
+        p.id,
+        p.mahasiswa_id,
+        p.kamar_id,
+        p.status_pendaftaran,
+        p.status_pendaftaran as status,
+        k.nomor_kamar,
+        k.jenis_asrama
+      FROM pendaftaran p
+      LEFT JOIN kamar k
+        ON p.kamar_id = k.id
+      WHERE p.mahasiswa_id = ?
+      `,
       [mahasiswa_id]
     );
 
     res.status(200).json(rows);
   } catch (error) {
-    console.log(error);
+    console.error("🔥 ERROR GET STATUS MAHASISWA:", error);
     res.status(500).json({
       message: "Server error",
     });
@@ -98,26 +98,26 @@ exports.getAllPendaftaran = async (req, res) => {
   try {
     const [rows] = await db.query(
       `
-  SELECT
-    p.id,
-    p.mahasiswa_id,
-    p.kamar_id,
-    p.status_pendaftaran,
-    p.status_pendaftaran as status,
-    m.nama,
-    m.nim,
-    m.jurusan,
-    m.gender,
-    m.email,
-    k.nomor_kamar,
-    k.jenis_asrama
-  FROM pendaftaran p
-  JOIN mahasiswa m
-    ON p.mahasiswa_id = m.id
-  LEFT JOIN kamar k
-    ON p.kamar_id = k.id
-  ORDER BY p.id DESC
-  `
+      SELECT
+        p.id,
+        p.mahasiswa_id,
+        p.kamar_id,
+        p.status_pendaftaran,
+        p.status_pendaftaran as status,
+        m.nama,
+        m.nim,
+        m.jurusan,
+        m.gender,
+        m.email,
+        k.nomor_kamar,
+        k.jenis_asrama
+      FROM pendaftaran p
+      JOIN mahasiswa m
+        ON p.mahasiswa_id = m.id
+      LEFT JOIN kamar k
+        ON p.kamar_id = k.id
+      ORDER BY p.id DESC
+      `
     );
 
     res.status(200).json(rows);
@@ -185,8 +185,8 @@ exports.approvePendaftaran = async (req, res) => {
 
     const kamar = kamarRows[0];
 
-    // CEK KAPASITAS
-    if (kamar.terisi >= kamar.kapasitas) {
+    // CEK KAPASITAS (abaikan jika memindahkan ke kamar yang sama)
+    if (kamar.terisi >= kamar.kapasitas && pendaftaran.kamar_id !== finalKamarId) {
       return res.status(400).json({
         message: "Kamar sudah penuh",
       });
@@ -265,7 +265,7 @@ exports.approvePendaftaran = async (req, res) => {
       message: "Mahasiswa berhasil ditempatkan di kamar",
     });
   } catch (error) {
-    console.log(error);
+    console.error("🔥 ERROR APPROVE PENDAFTARAN:", error);
     res.status(500).json({
       message: "Server error",
     });
@@ -333,7 +333,7 @@ exports.rejectPendaftaran = async (req, res) => {
       message: "Pendaftaran berhasil ditolak",
     });
   } catch (error) {
-    console.log(error);
+    console.error("🔥 ERROR REJECT PENDAFTARAN:", error);
     res.status(500).json({
       message: "Server error",
     });
@@ -396,7 +396,7 @@ exports.reopenPendaftaran = async (req, res) => {
       message: "Status pendaftaran dikembalikan ke Menunggu Verifikasi",
     });
   } catch (error) {
-    console.log(error);
+    console.error("🔥 ERROR REOPEN PENDAFTARAN:", error);
     res.status(500).json({
       message: "Server error",
     });

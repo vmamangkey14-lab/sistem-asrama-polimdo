@@ -20,23 +20,33 @@ from "../../layouts/MahasiswaLayout";
 
 function DashboardMahasiswa() {
 
-  const user = JSON.parse(
-    localStorage.getItem("mahasiswaData")
+  const initialUser = JSON.parse(
+    localStorage.getItem("mahasiswaData") || "{}"
   );
 
-  const [status, setStatus] =
-    useState(null);
-
+  const [profile, setProfile] = useState(initialUser);
+  const [status, setStatus] = useState(null);
   const [pembayaran, setPembayaran] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("TRANSFER");
+
+  // ======================
+  // FETCH PROFILE
+  // ======================
+  const fetchProfile = async () => {
+    try {
+      const response = await API.get("/mahasiswa/profile");
+      setProfile(response.data);
+      localStorage.setItem("mahasiswaData", JSON.stringify(response.data));
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
 
   // ======================
   // FETCH STATUS
   // ======================
   const fetchStatus = async () => {
-
     try {
-
       const response = await API.get(
         "/pendaftaran/status"
       );
@@ -44,19 +54,13 @@ function DashboardMahasiswa() {
       if (
         response.data.length > 0
       ) {
-
         setStatus(
           response.data[0]
         );
-
       }
-
     } catch (error) {
-
-      console.log(error);
-
+      console.log("Error fetching status:", error);
     }
-
   };
 
   // ======================
@@ -67,7 +71,7 @@ function DashboardMahasiswa() {
       const response = await API.get("/pembayaran/status");
       setPembayaran(response.data);
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching payment status:", error);
     }
   };
 
@@ -118,31 +122,21 @@ function DashboardMahasiswa() {
   // ======================
   // DAFTAR ASRAMA (FALLBACK)
   // ======================
-  const handleDaftar =
-    async () => {
-
-      try {
-
-        await API.post(
-          "/pendaftaran/daftar"
-        );
-
-        alert(
-          "Berhasil daftar asrama"
-        );
-
-        fetchStatus();
-
-      } catch (error) {
-
-        alert(
-          error.response?.data
-            ?.message || "Gagal mendaftar asrama"
-        );
-
-      }
-
-    };
+  const handleDaftar = async () => {
+    try {
+      await API.post(
+        "/pendaftaran/daftar"
+      );
+      alert(
+        "Berhasil daftar asrama"
+      );
+      fetchStatus();
+    } catch (error) {
+      alert(
+        error.response?.data?.message || "Gagal mendaftar asrama"
+      );
+    }
+  };
 
   // ======================
   // UPLOAD FOTO
@@ -161,11 +155,10 @@ function DashboardMahasiswa() {
         },
       });
       alert(response.data.message);
-      // update local storage user
-      const updatedUser = { ...user, foto_profile: response.data.foto_profile };
+      // update state and local storage user
+      const updatedUser = { ...profile, foto_profile: response.data.foto_profile };
+      setProfile(updatedUser);
       localStorage.setItem("mahasiswaData", JSON.stringify(updatedUser));
-      // reload to see changes
-      window.location.reload();
     } catch (error) {
       alert(error.response?.data?.message || "Gagal mengupload foto");
     }
@@ -206,7 +199,7 @@ function DashboardMahasiswa() {
   const handleCetakKartu = async () => {
     try {
       const logoUrl = "/logo-polimdo.png";
-      const photoUrl = getUploadUrl(user.foto_profile);
+      const photoUrl = getUploadUrl(profile.foto_profile);
 
       // Load images to base64
       const [logoBase64, photoBase64] = await Promise.all([
@@ -284,12 +277,12 @@ function DashboardMahasiswa() {
 
       // 5. Render Student Details grid
       const rows = [
-        { label: "NAMA", val: user.nama },
-        { label: "NIM", val: user.nim },
-        { label: "JURUSAN", val: user.jurusan },
+        { label: "NAMA", val: profile.nama || "-" },
+        { label: "NIM", val: profile.nim || "-" },
+        { label: "JURUSAN", val: profile.jurusan || "-" },
         { label: "ASRAMA", val: status?.jenis_asrama || "-" },
         { label: "KAMAR", val: status?.nomor_kamar || "-" },
-        { label: "GENDER", val: user.gender || "-" },
+        { label: "GENDER", val: profile.gender || "-" },
       ];
 
       const startY = 20.5;
@@ -330,7 +323,7 @@ function DashboardMahasiswa() {
       doc.text("RESIDENT", 74, 49.2, { align: "center" });
 
       // Download the generated PDF
-      doc.save(`Kartu_Asrama_${user.nim}.pdf`);
+      doc.save(`Kartu_Asrama_${profile.nim}.pdf`);
     } catch (err) {
       console.error("Gagal cetak kartu PDF:", err);
       alert("Terjadi kesalahan saat mencetak kartu asrama.");
@@ -341,10 +334,9 @@ function DashboardMahasiswa() {
   // LOAD DATA
   // ======================
   useEffect(() => {
-
+    fetchProfile();
     fetchStatus();
     fetchPembayaranStatus();
-
   }, []);
 
   return (
@@ -375,9 +367,9 @@ function DashboardMahasiswa() {
         <div className="bg-gradient-to-br from-blue-950 to-blue-700 text-white rounded-[40px] p-8 shadow-2xl flex flex-col items-center lg:items-start text-center lg:text-left">
 
           <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white/20 mb-4 flex items-center justify-center bg-white/10">
-            {user?.foto_profile ? (
+            {profile?.foto_profile ? (
               <img
-                src={getUploadUrl(user.foto_profile)}
+                src={getUploadUrl(profile.foto_profile)}
                 alt="profile"
                 className="w-full h-full object-cover"
               />
@@ -397,7 +389,7 @@ function DashboardMahasiswa() {
           </label>
 
           <h2 className="text-3xl font-bold mb-3">
-            {user?.nama}
+            {profile?.nama}
           </h2>
 
           <p className="text-blue-100 mb-8">
@@ -417,7 +409,7 @@ function DashboardMahasiswa() {
                 </p>
 
                 <h3 className="font-semibold">
-                  {user?.nim}
+                  {profile?.nim}
                 </h3>
 
               </div>
@@ -435,7 +427,7 @@ function DashboardMahasiswa() {
                 </p>
 
                 <h3 className="font-semibold">
-                  {user?.jurusan}
+                  {profile?.jurusan}
                 </h3>
 
               </div>
@@ -453,7 +445,7 @@ function DashboardMahasiswa() {
                 </p>
 
                 <h3 className="font-semibold">
-                  {user?.gender}
+                  {profile?.gender}
                 </h3>
 
               </div>

@@ -75,7 +75,7 @@ exports.uploadPembayaran = async (req, res) => {
       bukti_pembayaran: filename,
     });
   } catch (error) {
-    console.error(error);
+    console.error("🔥 ERROR UPLOAD PEMBAYARAN:", error);
     res.status(500).json({
       message: "Server error",
     });
@@ -105,7 +105,7 @@ exports.getPembayaranStatus = async (req, res) => {
 
     res.status(200).json(rows[0]);
   } catch (error) {
-    console.error(error);
+    console.error("🔥 ERROR GET PEMBAYARAN STATUS:", error);
     res.status(500).json({
       message: "Server error",
     });
@@ -141,7 +141,7 @@ exports.getAllPembayaran = async (req, res) => {
 
     res.status(200).json(rows);
   } catch (error) {
-    console.error(error);
+    console.error("🔥 ERROR GET ALL PEMBAYARAN:", error);
     res.status(500).json({
       message: "Server error",
     });
@@ -188,7 +188,7 @@ exports.verifyPembayaran = async (req, res) => {
       message: `Status pembayaran berhasil diupdate menjadi ${status_pembayaran}`,
     });
   } catch (error) {
-    console.error(error);
+    console.error("🔥 ERROR VERIFY PEMBAYARAN:", error);
     res.status(500).json({
       message: "Server error",
     });
