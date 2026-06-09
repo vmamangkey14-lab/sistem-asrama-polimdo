@@ -1,0 +1,20 @@
+[33mcommit c3d41ce622a78d06d78d928cd626106819acc707[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Victoria <victoriamamngkey14@gmail.com>
+Date:   Tue Jun 9 13:19:30 2026 +0800
+
+    Fix: Configure production and development API URLs
+
+[1mdiff --git a/frontend/.env b/frontend/.env[m
+[1mindex 377b2c0..750beee 100644[m
+[1m--- a/frontend/.env[m
+[1m+++ b/frontend/.env[m
+[36m@@ -1 +1 @@[m
+[31m-VITE_API_URL=http://localhost:5000/api[m
+[32m+[m[32mVITE_API_URL=https://sistem-asrama-polimdo-production.up.railway.app/api[m
+[1mdiff --git a/frontend/.env.development b/frontend/.env.development[m
+[1mnew file mode 100644[m
+[1mindex 0000000..377b2c0[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/.env.development[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32mVITE_API_URL=http://localhost:5000/api[m

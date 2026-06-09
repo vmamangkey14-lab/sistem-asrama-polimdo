@@ -1,0 +1,44 @@
+/* Design System for Dashboard UI */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --font-family: 'Inter', sans-serif;
+  --bg-gradient: linear-gradient(135deg, #0d0d0d, #1a1a2e);
+  --text-primary: #f5f5f5;
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --accent: #00bcd4; /* teal accent */
+  --accent-bg: rgba(0, 188, 212, 0.1);
+  --card-radius: 1.5rem;
+  --transition-speed: 0.3s;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism panel */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+.glass-panel:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Utility classes */
+.text-primary { color: var(--text-primary); }
+.bg-accent { background-color: var(--accent); color: #fff; }
+.rounded-lg { border-radius: var(--card-radius); }
+.transition { transition: all var(--transition-speed) ease; }

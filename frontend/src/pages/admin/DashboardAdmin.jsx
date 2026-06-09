@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import API from "../../services/api";
-import AdminLayout from "../../layouts/AdminLayout";
+import GlassCard from "../../components/GlassCard";
 
 function DashboardAdmin() {
   const [pendaftaran, setPendaftaran] = useState([]);
@@ -123,11 +123,6 @@ function DashboardAdmin() {
             CARD STATISTIK
         ====================== */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {/* Card 1: Total Mahasiswa */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300 flex items-center gap-4 relative overflow-hidden group">
-            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:scale-110 transition duration-300">
-              <Users size={28} />
-            </div>
             <div>
               <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Total Mahasiswa</p>
               <h3 className="text-2xl font-bold text-gray-800 mt-1">{stats.totalMahasiswa}</h3>
