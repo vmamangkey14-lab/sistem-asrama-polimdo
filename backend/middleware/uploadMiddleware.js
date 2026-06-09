@@ -34,12 +34,44 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
+const multerInstance = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
   },
 });
+
+// Wrapper to intercept multer errors and return clean response
+const wrapMiddleware = (middlewareFn) => {
+  return (req, res, next) => {
+    middlewareFn(req, res, (err) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          if (err.code === "LIMIT_FILE_SIZE") {
+            return res.status(400).json({
+              message: "Ukuran foto maksimal 5 MB",
+            });
+          }
+          return res.status(400).json({
+            message: `File upload error: ${err.message}`,
+          });
+        }
+        return res.status(400).json({
+          message: err.message,
+        });
+      }
+      next();
+    });
+  };
+};
+
+const upload = {
+  single: (fieldname) => wrapMiddleware(multerInstance.single(fieldname)),
+  array: (fieldname, maxCount) => wrapMiddleware(multerInstance.array(fieldname, maxCount)),
+  fields: (fields) => wrapMiddleware(multerInstance.fields(fields)),
+  any: () => wrapMiddleware(multerInstance.any()),
+  none: () => wrapMiddleware(multerInstance.none()),
+};
 
 module.exports = upload;
